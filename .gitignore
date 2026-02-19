@@ -1,0 +1,33 @@
+# Flutter / Dart
+.dart_tool/
+.packages
+build/
+ios/Flutter/App.framework
+ios/Flutter/Flutter.framework
+ios/Flutter/Generated.xcconfig
+ios/Flutter/flutter_export_environment.sh
+ios/Flutter/GeneratedPluginRegistrant.*
+
+# Android
+android/.gradle/
+android/local.properties
+android/gradlew
+android/gradlew.bat
+android/app/build/
+android/app/google-services.json   # ← À inclure si tu ne veux pas push la clé Firebase (mais recommandé pour le cours)
+
+# Node.js / NestJS
+node_modules/
+npm-debug.log
+yarn-error.log
+backend/.env
+backend/dist/
+
+# Divers
+.DS_Store
+Thumbs.db
+*.log
+.idea/
+.vscode/
+*.swp
+*~
