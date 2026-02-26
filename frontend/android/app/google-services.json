@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "706231828900",
+    "project_id": "prolinks-3e718",
+    "storage_bucket": "prolinks-3e718.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:706231828900:android:97836100dd6bf654790131",
+        "android_client_info": {
+          "package_name": "com.example.frontend"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzm1Ua9Kx6If95LEiDr698mE9eU_znvNM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:706231828900:android:850eadea2f93ee94790131",
+        "android_client_info": {
+          "package_name": "com.prolinks.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCzm1Ua9Kx6If95LEiDr698mE9eU_znvNM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
