@@ -1,13 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'providers/auth_provider.dart';
+import 'providers/post_provider.dart';
 import 'screens/signup_screen.dart';
 import 'screens/home_screen.dart';
 import 'screens/login_screen.dart';
 
 void main() {
   runApp(
-    ChangeNotifierProvider(create: (_) => AuthProvider(), child: const MyApp()),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => AuthProvider()),
+        ChangeNotifierProvider(create: (_) => PostProvider()),
+      ],
+      child: const MyApp(),
+    ),
   );
 }
 

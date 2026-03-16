@@ -1,5 +1,5 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
-import { Document } from 'mongoose';
+import { Document, Types } from 'mongoose';
 
 export enum Role {
   PROFESSIONNEL = 'professionnel',
@@ -66,6 +66,14 @@ export class User extends Document {
 
   @Prop()
   lastLogin?: Date;
+
+  // GESTION DU RÉSEAU (Les IDs des amis)
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }], default: [] })
+  connections: Types.ObjectId[];
+
+  // GESTION DES INVITATIONS REÇUES (En attente)
+  @Prop({ type: [{ type: Types.ObjectId, ref: 'User' }], default: [] })
+  pendingRequests: Types.ObjectId[];
 }
 
 export const UserSchema = SchemaFactory.createForClass(User);

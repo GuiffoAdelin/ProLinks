@@ -1,13 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
-// 1. AJOUTE TES IMPORTS ICI (Vérifie bien les noms de fichiers)
 import 'profile_screen.dart';
 import 'network_screen.dart';
 import 'add_post_screen.dart';
 import 'feed_screen.dart';
 import 'jobs_screen.dart';
 import 'search_delegate.dart';
+import 'notifications_screen.dart';
+import 'invitations_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -19,13 +20,13 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
 
-  // 2. Liste des écrans mise à jour
+  // MODIFICATION : On retire AddPostScreen de la liste car il doit être ouvert en Modal
   final List<Widget> _screens = [
-    const FeedScreen(), // Index 0
-    const NetworkScreen(), // Index 1
-    const AddPostScreen(), // Index 2
-    const JobsScreen(), // Index 3
-    const ProfileScreen(), // Index 4
+    const FeedScreen(),
+    const NetworkScreen(),
+    const SizedBox.shrink(), // Placeholder pour l'index 2 (Bouton Add)
+    const JobsScreen(),
+    const ProfileScreen(),
   ];
 
   @override
@@ -38,7 +39,6 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: theme.scaffoldBackgroundColor,
       appBar: AppBar(
-        // On remplace le leading manuel par le bouton du Drawer automatique
         title: Text(
           "ProLinks",
           style: TextStyle(
@@ -60,7 +60,6 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      // 3. APPEL DU DRAWER
       drawer: _buildSideMenu(context, auth, isDark),
       body: _screens[_currentIndex],
       bottomNavigationBar: Container(
@@ -74,7 +73,20 @@ class _HomeScreenState extends State<HomeScreen> {
           borderRadius: BorderRadius.circular(30),
           child: BottomNavigationBar(
             currentIndex: _currentIndex,
-            onTap: (index) => setState(() => _currentIndex = index),
+            onTap: (index) {
+              // MODIFICATION : Si on clique sur le bouton Add (index 2)
+              if (index == 2) {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    fullscreenDialog: true, // Apparence de modal
+                    builder: (context) => const AddPostScreen(),
+                  ),
+                );
+              } else {
+                setState(() => _currentIndex = index);
+              }
+            },
             type: BottomNavigationBarType.fixed,
             backgroundColor: Colors.transparent,
             elevation: 0,
@@ -108,68 +120,164 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // --- MÉTHODES DE CONSTRUCTION ---
+  // --- Le reste de votre code (Drawer, buildAvatar) reste identique ---
 
   Widget _buildSideMenu(BuildContext context, AuthProvider auth, bool isDark) {
     final user = auth.userData;
+    final theme = Theme.of(context);
+    final primaryColor = theme.primaryColor;
+
     return Drawer(
+      backgroundColor: theme.scaffoldBackgroundColor,
       child: Column(
         children: [
-          UserAccountsDrawerHeader(
-            decoration: BoxDecoration(color: Theme.of(context).primaryColor),
-            currentAccountPicture: _buildAvatar(user, Colors.white),
-            accountName: Text(
-              "${user?['prenom'] ?? ''} ${user?['nom'] ?? 'Utilisateur'}",
+          Container(
+            padding: const EdgeInsets.fromLTRB(20, 60, 20, 25),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: primaryColor.withOpacity(0.05),
+              border: Border(
+                bottom: BorderSide(color: Colors.grey.withOpacity(0.1)),
+              ),
             ),
-            accountEmail: Text(user?['email'] ?? ''),
-          ),
-          ListTile(
-            leading: const Icon(Icons.person_outline),
-            title: const Text("Mon Profil"),
-            onTap: () {
-              Navigator.pop(context);
-              setState(() => _currentIndex = 4);
-            },
-          ),
-          ListTile(
-            leading: const Icon(Icons.people_outline),
-            title: const Text("Mon Réseau"),
-            onTap: () {
-              Navigator.pop(context);
-              setState(() => _currentIndex = 1);
-            },
-          ),
-          const Divider(),
-          ListTile(
-            leading: Icon(isDark ? Icons.light_mode : Icons.dark_mode),
-            title: Text(isDark ? "Mode Clair" : "Mode Sombre"),
-            onTap: () {},
-          ),
-          const Spacer(),
-          ListTile(
-            leading: const Icon(Icons.logout, color: Colors.red),
-            title: const Text(
-              "Déconnexion",
-              style: TextStyle(color: Colors.red),
+            child: Row(
+              children: [
+                _buildAvatar(user, primaryColor, 32),
+                const SizedBox(width: 15),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        "${user?['prenom'] ?? ''} ${user?['nom'] ?? 'Utilisateur'}",
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                        ),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                      Text(
+                        user?['email'] ?? '',
+                        style: TextStyle(color: Colors.grey[600], fontSize: 13),
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            onTap: () => auth.logout(),
           ),
-          const SizedBox(height: 20),
+          const SizedBox(height: 10),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(horizontal: 12),
+              children: [
+                _drawerItem(
+                  icon: Icons.person_outline_rounded,
+                  label: "Mon Profil",
+                  onTap: () {
+                    Navigator.pop(context);
+                    setState(() => _currentIndex = 4);
+                  },
+                ),
+                _drawerItem(
+                  icon: Icons.people_outline_rounded,
+                  label: "Mon Réseau",
+                  onTap: () {
+                    Navigator.pop(context);
+                    setState(() => _currentIndex = 1);
+                  },
+                ),
+                const Divider(),
+                _drawerItem(
+                  icon: Icons.notifications_none_rounded,
+                  label: "Notifications",
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const NotificationsScreen(),
+                      ),
+                    );
+                  },
+                ),
+                _drawerItem(
+                  icon: Icons.mail_outline_rounded,
+                  label: "Mes Invitations",
+                  onTap: () {
+                    Navigator.pop(context);
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (_) => const InvitationsScreen(),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: _drawerItem(
+              icon: Icons.logout_rounded,
+              label: "Déconnexion",
+              color: Colors.redAccent,
+              onTap: () => auth.logout(),
+            ),
+          ),
         ],
       ),
     );
   }
 
-  Widget _buildAvatar(Map<String, dynamic>? user, Color color) {
+  Widget _drawerItem({
+    required IconData icon,
+    required String label,
+    required VoidCallback onTap,
+    Color? color,
+  }) {
+    return ListTile(
+      leading: Icon(icon, color: color ?? Colors.grey[800], size: 26),
+      title: Text(
+        label,
+        style: TextStyle(
+          color: color ?? Colors.grey[800],
+          fontWeight: FontWeight.w600,
+          fontSize: 15,
+        ),
+      ),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      onTap: onTap,
+    );
+  }
+
+  Widget _buildAvatar(
+    Map<String, dynamic>? user,
+    Color primaryColor,
+    double radius,
+  ) {
+    final auth = context
+        .watch<AuthProvider>(); // ← on récupère AuthProvider ici
     final photoUrl = user?['photoUrl'];
-    return CircleAvatar(
-      backgroundColor: Colors.white24,
-      backgroundImage: (photoUrl != null && photoUrl.isNotEmpty)
-          ? NetworkImage(photoUrl)
-          : null,
-      child: (photoUrl == null || photoUrl.isEmpty)
-          ? const Icon(Icons.person, color: Colors.white)
-          : null,
+
+    return Container(
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: primaryColor.withOpacity(0.2), width: 2),
+      ),
+      child: CircleAvatar(
+        radius: radius,
+        backgroundColor: Colors.white,
+        backgroundImage: NetworkImage(
+          auth.getFullImageUrl(photoUrl), // ← CORRECTION ICI !
+        ),
+        child: photoUrl == null || photoUrl.isEmpty
+            ? Icon(Icons.person, size: radius, color: primaryColor)
+            : null,
+      ),
     );
   }
 }

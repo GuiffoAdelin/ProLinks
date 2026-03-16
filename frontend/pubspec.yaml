@@ -43,6 +43,9 @@ dependencies:
   # Stockage sécurisé (recommandé pour tokens JWT, refresh tokens, etc.)
   flutter_secure_storage: ^9.2.2
 
+  image_picker: ^1.2.1
+  http_parser: ^4.0.0
+
   # Firebase – versions récentes (vérifiées pub.dev fin 2025/début 2026)
   firebase_core: ^3.6.0
   firebase_auth: ^5.3.0

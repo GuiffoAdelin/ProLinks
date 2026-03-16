@@ -6,6 +6,9 @@ import { UsersModule } from './users/users.module';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { PostsModule } from './posts/posts.module';
+import { ConnectionsModule } from './connections/connections.module';
+import { JobsModule } from './jobs/jobs.module';
+import { NotificationsModule } from './notifications/notifications.module';
 
 @Global()
 @Module({
@@ -18,6 +21,9 @@ import { PostsModule } from './posts/posts.module';
     }),
     UsersModule,
     PostsModule,
+    ConnectionsModule,
+    JobsModule,
+    NotificationsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
