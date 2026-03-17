@@ -7,8 +7,8 @@ class AuthProvider with ChangeNotifier {
   final storage = const FlutterSecureStorage();
 
   // ====================== UNE SEULE URL DE BASE ======================
-  static const String baseUrl = "https://3c62-154-72-153-44.ngrok-free.app";
-  static const String ngrokUrl = "https://3c62-154-72-153-44.ngrok-free.app";
+  static const String baseUrl = "https://prolinks-uqml.onrender.com";
+  //static const String ngrokUrl = "https://b881-154-72-153-37.ngrok-free.app";
 
   String? _token;
   String? _userId;
@@ -275,6 +275,19 @@ class AuthProvider with ChangeNotifier {
       return "https://www.w3schools.com/howto/img_avatar.png";
     }
     if (path.startsWith("http")) return path; // déjà complète
-    return "$ngrokUrl$path"; // ajoute ngrok + chemin relatif
+    return "$baseUrl$path"; // ajoute ngrok + chemin relatif
+  }
+
+  static Map<String, String> getHeaders([String? token]) {
+    final headers = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    };
+    if (token != null) {
+      headers['Authorization'] = 'Bearer $token';
+    }
+    // Tu pourras supprimer cette ligne une fois sur Render :
+    headers['ngrok-skip-browser-warning'] = 'true';
+    return headers;
   }
 }

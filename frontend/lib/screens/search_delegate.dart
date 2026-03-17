@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import '../providers/auth_provider.dart';
 
 class CustomSearchDelegate extends SearchDelegate {
   final String token;
-  final String baseUrl =
-      "https://3c62-154-72-153-44.ngrok-free.app"; // ← mets ton ngrok actuel ici
+  /* final String baseUrl =
+      "https://b881-154-72-153-37.ngrok-free.app";*/ // ← mets ton ngrok actuel ici
 
   CustomSearchDelegate(this.token);
 
@@ -15,7 +16,7 @@ class CustomSearchDelegate extends SearchDelegate {
     String targetUserId,
   ) async {
     final response = await http.post(
-      Uri.parse("$baseUrl/users/invite/$targetUserId"),
+      Uri.parse("${AuthProvider.baseUrl}/users/invite/$targetUserId"),
       headers: {
         'Authorization': 'Bearer $token',
         'ngrok-skip-browser-warning': 'true',
@@ -50,7 +51,7 @@ class CustomSearchDelegate extends SearchDelegate {
     return FutureBuilder<http.Response>(
       future: http.get(
         Uri.parse(
-          "$baseUrl/users/search?q=${Uri.encodeComponent(query.trim())}",
+          "${AuthProvider.baseUrl}/users/search?q=${Uri.encodeComponent(query.trim())}",
         ),
         headers: {
           'Authorization': 'Bearer $token',

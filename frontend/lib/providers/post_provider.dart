@@ -2,17 +2,18 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import '../providers/auth_provider.dart';
 
 class PostProvider with ChangeNotifier {
   List<dynamic> _posts = [];
   bool _isLoading = false;
   List<dynamic> get posts => _posts;
   bool get isLoading => _isLoading;
-  final String baseUrl = "https://3c62-154-72-153-44.ngrok-free.app";
+  //final String baseUrl = "https://b881-154-72-153-37.ngrok-free.app";
 
   String getImageUrl(String? path) {
     if (path == null || path.isEmpty) return "";
-    return "$baseUrl$path";
+    return "${AuthProvider.baseUrl}$path";
   }
 
   Future<void> fetchPosts() async {
@@ -20,7 +21,7 @@ class PostProvider with ChangeNotifier {
     notifyListeners();
     try {
       final response = await http.get(
-        Uri.parse("$baseUrl/posts"),
+        Uri.parse("${AuthProvider.baseUrl}/posts"),
         headers: {'ngrok-skip-browser-warning': 'true'},
       );
       if (response.statusCode == 200) {
@@ -36,7 +37,10 @@ class PostProvider with ChangeNotifier {
 
   Future<bool> addPost(String content, String token, File? imageFile) async {
     try {
-      var request = http.MultipartRequest('POST', Uri.parse("$baseUrl/posts"));
+      var request = http.MultipartRequest(
+        'POST',
+        Uri.parse("${AuthProvider.baseUrl}/posts"),
+      );
       request.headers.addAll({
         'Authorization': 'Bearer $token',
         'ngrok-skip-browser-warning': 'true',
@@ -74,7 +78,7 @@ class PostProvider with ChangeNotifier {
 
     try {
       final response = await http.patch(
-        Uri.parse("$baseUrl/posts/$postId/like"),
+        Uri.parse("${AuthProvider.baseUrl}/posts/$postId/like"),
         headers: {
           "Authorization": "Bearer $token",
           "Content-Type": "application/json",
@@ -97,7 +101,7 @@ class PostProvider with ChangeNotifier {
   Future<bool> addComment(String postId, String content, String token) async {
     try {
       final response = await http.post(
-        Uri.parse('$baseUrl/posts/$postId/comment'),
+        Uri.parse('${AuthProvider.baseUrl}/posts/$postId/comment'),
         headers: {
           'Authorization': 'Bearer $token',
           'Content-Type': 'application/json',

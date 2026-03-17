@@ -261,7 +261,7 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
                               : (user?['photoUrl'] != null &&
                                     user!['photoUrl'].isNotEmpty)
                               ? NetworkImage(
-                                  "${user['photoUrl']}?t=${DateTime.now().millisecondsSinceEpoch}",
+                                  "${AuthProvider.baseUrl}${user['photoUrl']}?t=${DateTime.now().millisecondsSinceEpoch}",
                                 )
                               : null,
                           child:

@@ -13,15 +13,17 @@ async function bootstrap() {
 
   // CORS pour ngrok
   app.enableCors({
-    origin: '*',
+   /* origin: '*',
     methods: 'GET,POST,PUT,PATCH,DELETE',
-    allowedHeaders: '*',
+    allowedHeaders: '*',*/
   });
 
-  await app.listen(3000, '0.0.0.0');
+  const port = process.env.PORT || 3000;
 
-  console.log('🚀 Serveur démarré sur http://localhost:3000');
-  console.log('📁 Images accessibles ici → http://localhost:3000/uploads/avatars/xxx.jpg');
-  console.log(`URL complète : ${await app.getUrl()}`);
+  await app.listen(port, '0.0.0.0');
+  
+  console.log('🚀 Serveur démarré sur http://localhost:3000 ou ${port}');
+  //console.log('📁 Images accessibles ici → http://localhost:3000/uploads/avatars/xxx.jpg');
+  //console.log(`URL complète : ${await app.getUrl()}`);
 }
 bootstrap();

@@ -4,6 +4,7 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { JwtModule } from '@nestjs/jwt';
+import { ConfigModule } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { PostsModule } from './posts/posts.module';
 import { ConnectionsModule } from './connections/connections.module';
@@ -13,10 +14,11 @@ import { NotificationsModule } from './notifications/notifications.module';
 @Global()
 @Module({
   imports: [
-    MongooseModule.forRoot('mongodb+srv://guiffoadel05_db_user:6fLlyuVR1mxhXZ9P@cluster0.inl8mnj.mongodb.net/prolinks?retryWrites=true&w=majority'),
+    ConfigModule.forRoot(),
+    MongooseModule.forRoot(process.env.MONGODB_URI!),
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({ 
-      secret: 'secretKey123', // CHANGE ÇA EN PROD (mets dans .env)
+      secret: process.env.JWT_SECRET || 'secretKey123', // A CHANGER EN PROD (mets dans .env)
       signOptions: { expiresIn: '1h' }, // token expire en 1 heure
     }),
     UsersModule,

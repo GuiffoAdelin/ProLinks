@@ -34,6 +34,10 @@ dependencies:
   # Pour les appels HTTP / APIs
   http: ^1.6.0
 
+  # Offline Storage (Hive)
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
+  
   # Stockage local simple (moins sécurisé que flutter_secure_storage)
   shared_preferences: ^2.3.0
 
